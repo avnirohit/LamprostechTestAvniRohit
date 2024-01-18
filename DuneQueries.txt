@@ -1,0 +1,22 @@
+Ans1)
+
+SELECT
+  receiver,
+  SUM(value) AS total_tokens_received
+FROM erc20_optimism.evt_Transfer
+WHERE from_address = '0x5B8F3fb479571Eca6A06240b21926Db586Cdf10f'
+  AND contract_address = '0x4200000000000000000000000000000000000042'
+GROUP BY receiver
+ORDER BY total_tokens_received DESC
+LIMIT 10;
+
+Ans2)
+
+SELECT
+  date_trunc('day', timestamp) AS transaction_date,
+  sum(value) AS total_transaction_value,
+  sum(sum(value)) OVER (ORDER BY date_trunc('day', timestamp)) AS cumulative_transaction_value
+FROM ethereum.transactions
+WHERE timestamp >= '2023-11-01' AND timestamp < '2023-12-01'
+GROUP BY transaction_date
+ORDER BY transaction_date;
